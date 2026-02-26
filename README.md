@@ -41,7 +41,7 @@ X2 = sp.savgol_filter(X_corr, window_length=5, polyorder=3, deriv=1, axis=0)
 
 ---
 
-## 🤖 Neural Network Model
+## Neural Network Model
 
 ```python
 from sklearn.neural_network import MLPClassifier
@@ -56,7 +56,7 @@ model = MLPClassifier(
 model.fit(X_train, y_train)
 ```
 
-
+---
 
 ## Model Evaluation
 
@@ -67,8 +67,9 @@ pred_test = model.predict(X_test)
 cm = confusion_matrix(y_test, pred_test)
 print("Test Accuracy:", model.score(X_test, y_test))
 
+--
 
-## 🛠 Technologies Used
+## Technologies Used
 
 - Python
 - NumPy
@@ -77,9 +78,11 @@ print("Test Accuracy:", model.score(X_test, y_test))
 - SciPy
 - Matplotlib
 
+---
 
-## Applications
+##  Applications
 
 - Precision agriculture
 - Environmental contamination monitoring
 - Spectral AI modeling
+
