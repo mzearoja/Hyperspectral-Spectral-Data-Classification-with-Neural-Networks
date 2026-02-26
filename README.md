@@ -1,101 +1,85 @@
-Hyperspectral Metal Toxicity Classification Using Artificial Neural Networks
+# Hyperspectral Metal Toxicity Classification Using ANN
 
-Machine learning pipeline for detecting heavy metal toxicity (Cadmium) in kale and basil using VNIR hyperspectral reflectance data.
+Artificial Neural Network model to classify cadmium toxicity levels in kale and basil using VNIR hyperspectral data.
 
-Originally developed at Purdue University – Institute for Plant Sciences
+Developed at Purdue University – Institute for Plant Sciences  
 Edited and extended by Maria Paula Zea
 
-🔬 Project Overview
 
-This project uses hyperspectral reflectance data (CEPF platform) to:
+## Project Overview
 
-Estimate heavy metal concentration (Cd)
+This project uses hyperspectral reflectance data to:
 
-Classify toxicity levels
+- Estimate heavy metal contamination (Cd)
+- Apply spectral preprocessing techniques
+- Train a neural network classifier
+- Evaluate model performance
 
-Compare spectral preprocessing strategies
 
-Train and evaluate an Artificial Neural Network (ANN) classifier
 
-The model transforms reflectance into absorbance, applies spectral preprocessing techniques, and trains a neural network to detect toxic thresholds.
+## Spectral Preprocessing
 
-📊 Data Processing Pipeline
-1️⃣ Spectral Preprocessing
+Reflectance → Absorbance transformation:
 
-Several preprocessing strategies were evaluated:
+```python
+X_corr = np.log10(1/X)
+```
 
-Reflectance → Absorbance conversion
+Standard Normal Variate (SNV):
 
-Standard Normal Variate (SNV)
-
-Savitzky-Golay 1st derivative
-
-Detrending
-
-Combined normalization + derivative
-
-Example:
-
-X_corr = np.log10(1/X)  # Reflectance to absorbance
-
-# SNV normalization
+```python
 uX = np.mean(X_corr,1)
 deltaX = np.std(X_corr,1)
 X1 = (np.array(X_corr)-uX.values.reshape(-1,1))/deltaX.values.reshape(-1,1)
+```
 
-# First derivative
+Savitzky-Golay first derivative:
+
+```python
 X2 = sp.savgol_filter(X_corr, window_length=5, polyorder=3, deriv=1, axis=0)
-2️⃣ Toxicity Threshold Definition
+```
 
-Binary classification was performed using a toxicity cutoff:
+---
 
-indy = y >= 1
-y = indy
-3️⃣ ANN Model Development
+## 🤖 Neural Network Model
 
-Model implemented using Scikit-Learn:
-
+```python
 from sklearn.neural_network import MLPClassifier
 
-regr = MLPClassifier(
+model = MLPClassifier(
     solver='lbfgs',
-    alpha=1e-10,
     hidden_layer_sizes=(50,),
-    random_state=1,
-    max_iter=1000
+    max_iter=1000,
+    random_state=1
 )
 
-regr.fit(X_train, y_train)
-4️⃣ Model Evaluation
+model.fit(X_train, y_train)
+```
 
-Train/Test split (75/25 stratified)
 
-Confusion Matrix
 
-Accuracy score
+## Model Evaluation
 
+```python
+from sklearn.metrics import confusion_matrix
+
+pred_test = model.predict(X_test)
 cm = confusion_matrix(y_test, pred_test)
-ConfusionMatrixDisplay(cm).plot()
+print("Test Accuracy:", model.score(X_test, y_test))
 
-print('Score testing: ', regr.score(X_test, y_test))
-📈 Results
 
-Neural network successfully classified toxic vs non-toxic samples.
+## 🛠 Technologies Used
 
-Spectral preprocessing significantly improved model stability.
+- Python
+- NumPy
+- Pandas
+- Scikit-learn
+- SciPy
+- Matplotlib
 
-First derivative + SNV normalization showed improved separation.
 
-🛠 Technologies Used
+## Applications
 
-Python
-
-NumPy
-
-Pandas
-
-Scikit-Learn
-
-SciPy
-
-Matplotlib
+- Precision agriculture
+- Environmental contamination monitoring
+- Spectral AI modeling
